@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">EmTrack</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_record">Record</string>
+    <string name="acc_x_raw">acc. x: %1$.2f</string>
+    <string name="acc_y_raw">acc. y: %1$.2f</string>
+    <string name="acc_z_raw">acc. z: %1$.2f</string>
+    <string name="error_no_sensor">No sensor</string>
+    <string name="record_btn_start">Start Recording</string>
+    <string name="record_btn_stop">Stop Recording</string>
+    <string name="file_name_str">default.csv</string>
+    <string name="status_msg">Status: Not started</string>
+
+</resources>
