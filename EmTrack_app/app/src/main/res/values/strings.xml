@@ -6,10 +6,27 @@
     <string name="acc_x_raw">acc. x: %1$.2f</string>
     <string name="acc_y_raw">acc. y: %1$.2f</string>
     <string name="acc_z_raw">acc. z: %1$.2f</string>
+    <string name="gyro_x_raw">gyro. x: %1$.2f</string>
+    <string name="gyro_y_raw">gyro. y: %1$.2f</string>
+    <string name="gyro_z_raw">gyro. z: %1$.2f</string>
+    <string name="mag_x_raw">mag. x: %1$.2f</string>
+    <string name="mag_y_raw">mag. y: %1$.2f</string>
+    <string name="mag_z_raw">mag. z: %1$.2f</string>
     <string name="error_no_sensor">No sensor</string>
     <string name="record_btn_start">Start Recording</string>
     <string name="record_btn_stop">Stop Recording</string>
-    <string name="file_name_str">default.csv</string>
+    <string name="movement_type">Choose movement type:</string>
     <string name="status_msg">Status: Not started</string>
+    <string name="rec_windows">Windows recorded: %d</string>
+    <string-array name="movement_dropdown">
+        <item>Still</item>
+        <item>Biking</item>
+        <item>Walking</item>
+        <item>Car</item>
+        <item>Bus</item>
+        <item>Train</item>
+        <item>Plane</item>
+    </string-array>
+
 
 </resources>
