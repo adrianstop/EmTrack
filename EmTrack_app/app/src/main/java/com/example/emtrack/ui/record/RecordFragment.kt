@@ -60,7 +60,6 @@ class RecordFragment : Fragment(), SensorEventListener, AdapterView.OnItemSelect
     private var noise: Noise = Noise.real(512)
 
 
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
