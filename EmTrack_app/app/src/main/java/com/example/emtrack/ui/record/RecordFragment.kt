@@ -116,12 +116,12 @@ class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderL
                 if(!dataFile.exists()){
                     dataFile.writeText("accX, accY, accZ, gyroX, gyroY, gyroZ, magX, magY," +
                             " magZ, orientW, orientX, orientY, orientZ, linAccX, linAccY, linAccZ," +
-                            " accMag, gyroMag, magMag, linAccMag")
+                            " accMag, gyroMag, magMag, linAccMag\n")
                 }
 
                 labelFile = File(requireContext().filesDir, recLabelFilename)
                 if(!labelFile.exists()){
-                    labelFile.writeText("label")
+                    labelFile.writeText("label\n")
                 }
             }
             else{
