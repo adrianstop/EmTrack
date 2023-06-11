@@ -18,14 +18,19 @@
     <string name="movement_type">Choose movement type:</string>
     <string name="status_msg">Status: Not started</string>
     <string name="rec_windows">Windows recorded: %d</string>
+
+    <string name="live_state">Current state: %1$s</string>
+    <string name="live_state_accuracy">Confidence: %1$.3f</string>
+
     <string-array name="movement_dropdown">
         <item>Still</item>
-        <item>Biking</item>
         <item>Walking</item>
+        <item>Run</item>
+        <item>Bike</item>
         <item>Car</item>
         <item>Bus</item>
         <item>Train</item>
-        <item>Plane</item>
+        <item>Subway</item>
     </string-array>
 
 

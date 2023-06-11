@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
 import java.io.File
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -13,8 +14,8 @@ class SensorRecorder (var mContext: Context?) : SensorEventListener {
 
     private val TAG = "SensorRecorder"
     private val MEAS_WINDOW_SIZE = 50
-    private val MIN_WINDOWS = 3
-    private val NUM_SENSORS = 21
+    val MIN_WINDOWS = 3
+    val NUM_SENSORS = 20
 
     private lateinit var mSensorManager: SensorManager
     private var mSensorAcc: Sensor? = null
@@ -22,7 +23,6 @@ class SensorRecorder (var mContext: Context?) : SensorEventListener {
     private var mSensorMag: Sensor? = null
     private var mSensorLinAcc: Sensor? = null
     private var mSensorOrientation: Sensor? = null
-    private var mSensorPressure: Sensor? = null
     private var accX: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
     private var accY: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
     private var accZ: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
@@ -43,19 +43,24 @@ class SensorRecorder (var mContext: Context?) : SensorEventListener {
     private var orientX: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
     private var orientY: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
     private var orientZ: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
-    private var pressure: FloatArray = FloatArray(MEAS_WINDOW_SIZE)
 
-    public var data: FloatArray = FloatArray(NUM_SENSORS * MIN_WINDOWS)
+    var data: MutableList<Float> = ArrayList(NUM_SENSORS*MIN_WINDOWS)
 
     private var accMeasFlag: Boolean = false
     private var gyroMeasFlag: Boolean = false
     private var magMeasFlag: Boolean = false
     private var linAccMeasFlag: Boolean = false
     private var orientMeasFlag: Boolean = false
-    private var pressureMeasFlag: Boolean = false
+    var dataReadyFlag: Boolean = false
 
     private var globalMeasCount: Int = 0
-    private var recWindowCount: Int = 0
+    var recWindowCount: Int = 0
+        set(value) {
+            field = value
+            recListener?.onRecWindowsChanged(value)
+        }
+
+    var recListener: RecorderListener? = null
 
     private lateinit var logFile: File
 
@@ -67,39 +72,42 @@ class SensorRecorder (var mContext: Context?) : SensorEventListener {
         mSensorMag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         mSensorLinAcc = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
         mSensorOrientation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
-        mSensorPressure = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
 
         if (mSensorAcc != null) {
             mSensorManager.registerListener(this, mSensorAcc, SensorManager.SENSOR_DELAY_NORMAL)
+            Log.d(TAG, "Accelerometer initialized")
         }
         if (mSensorGyro != null) {
             mSensorManager.registerListener(this, mSensorGyro, SensorManager.SENSOR_DELAY_NORMAL)
+            Log.d(TAG, "Gyroscope initialized")
         }
         if (mSensorMag != null) {
             mSensorManager.registerListener(this, mSensorMag, SensorManager.SENSOR_DELAY_NORMAL)
+            Log.d(TAG, "Magnetometer initialized")
         }
         if (mSensorLinAcc != null) {
             mSensorManager.registerListener(this, mSensorLinAcc, SensorManager.SENSOR_DELAY_NORMAL)
+            Log.d(TAG, "Linear Accelerometer initialized")
         }
         if (mSensorOrientation != null) {
             mSensorManager.registerListener(this, mSensorOrientation, SensorManager.SENSOR_DELAY_NORMAL)
+            Log.d(TAG, "Orientation initialized")
         }
-        if (mSensorPressure != null) {
-            mSensorManager.registerListener(this, mSensorPressure, SensorManager.SENSOR_DELAY_NORMAL)
-        }
+
+        Log.d(TAG, "Sensors initialized")
     }
 
     override fun onSensorChanged(event: SensorEvent) {
         if(globalMeasCount < MEAS_WINDOW_SIZE - 1){
             // Reset flags when all sensors have been measured
-            if(accMeasFlag && gyroMeasFlag && magMeasFlag && linAccMeasFlag && orientMeasFlag && pressureMeasFlag){
+            if(accMeasFlag && gyroMeasFlag && magMeasFlag && linAccMeasFlag && orientMeasFlag){
                 accMeasFlag = false
                 gyroMeasFlag = false
                 magMeasFlag = false
                 linAccMeasFlag = false
                 orientMeasFlag = false
-                pressureMeasFlag = false
                 globalMeasCount++
+                // Log.d(TAG, "Global meas count: $globalMeasCount")
             }
             val i = globalMeasCount
             when (event.sensor.type) {
@@ -148,41 +156,56 @@ class SensorRecorder (var mContext: Context?) : SensorEventListener {
                         orientMeasFlag = true
                     }
                 }
-                Sensor.TYPE_PRESSURE -> {
-                    if(!pressureMeasFlag){
-                        pressure[i] = event.values[0]
-                        pressureMeasFlag = true
-                    }
-                }
                 else -> {}
             }
         }
         else{
-            // Window complete -> write to file
-            val meanAccX = (accX.sum()/accX.size)
-            val meanAccY = (accY.sum()/accY.size)
-            val meanAccZ = (accZ.sum()/accZ.size)
-            val meanGyroX = (gyroX.sum()/gyroX.size)
-            val meanGyroY = (gyroY.sum()/gyroY.size)
-            val meanGyroZ = (gyroZ.sum()/gyroZ.size)
-            val meanMagX = (magX.sum()/magX.size)
-            val meanMagY = (magY.sum()/magY.size)
-            val meanMagZ = (magZ.sum()/magZ.size)
-            val meanOrientW = (orientW.sum()/orientW.size)
-            val meanOrientX = (orientX.sum()/orientX.size)
-            val meanOrientY = (orientY.sum()/orientY.size)
-            val meanOrientZ = (orientZ.sum()/orientZ.size)
-            val meanPressure = (pressure.sum()/pressure.size)
+            // Window complete -> add to data
+            // Drop last values
+            shiftData(NUM_SENSORS)
 
-            if(recWindowCount > MIN_WINDOWS){
+            // Push in elements in reverse order to match the order in which they are read
+            data.add(0, (absLinAcc.sum() / absLinAcc.size))
+            data.add(0, (absMag.sum() / absMag.size))
+            data.add(0, (absGyro.sum() / absGyro.size))
+            data.add(0, (absAcc.sum() / absAcc.size))
+            data.add(0, (linAccZ.sum() / linAccZ.size))
+            data.add(0, (linAccY.sum() / linAccY.size))
+            data.add(0, (linAccX.sum() / linAccX.size))
+            data.add(0, (orientZ.sum() / orientZ.size))
+            data.add(0, (orientY.sum() / orientY.size))
+            data.add(0, (orientX.sum() / orientX.size))
+            data.add(0, (orientW.sum() / orientW.size))
+            data.add(0, (magZ.sum() / magZ.size))
+            data.add(0, (magY.sum() / magY.size))
+            data.add(0, (magX.sum() / magX.size))
+            data.add(0, (gyroZ.sum() / gyroZ.size))
+            data.add(0, (gyroY.sum() / gyroY.size))
+            data.add(0, (gyroX.sum() / gyroX.size))
+            data.add(0, (accZ.sum() / accZ.size))
+            data.add(0, (accY.sum() / accY.size))
+            data.add(0, (accX.sum() / accX.size))
 
+            Log.d(TAG, "New data appended! data: $data")
+
+            if(recWindowCount >= MIN_WINDOWS){
+                data = data.slice(0 until NUM_SENSORS*MIN_WINDOWS).toMutableList()
+                dataReadyFlag = true
             }
             recWindowCount++
+            globalMeasCount = 0
         }
-
+    }
+    private fun shiftData(numPlaces: Int) {
+        for(i in 0 until data.size - numPlaces){
+            data[i + numPlaces] = data[i]
+        }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("Not yet implemented")
+        Log.d(TAG, "Accuracy changed")
     }
+}
+interface RecorderListener {
+    fun onRecWindowsChanged(value: Int)
 }

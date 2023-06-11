@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class LiveViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is live Fragment"
+        value = "Waiting for data..."
     }
     val text: LiveData<String> = _text
 }

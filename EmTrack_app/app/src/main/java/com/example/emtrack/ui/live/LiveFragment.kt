@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.emtrack.R
 import com.example.emtrack.databinding.FragmentLiveBinding
 
 class LiveFragment : Fragment() {
@@ -28,7 +29,7 @@ class LiveFragment : Fragment() {
         _binding = FragmentLiveBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+        val textView: TextView = binding.textLiveStatus
         liveViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
