@@ -66,6 +66,12 @@ class MainActivity : AppCompatActivity() {
         startInferenceLoop()
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopInferenceLoop()
+
+    }
     // Define a Handler and a Runnable
     private val handler = Handler(Looper.getMainLooper())
     private val inferenceRunnable = object : Runnable {

@@ -1,9 +1,5 @@
 package com.example.emtrack.ui.record
 
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -11,20 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.emtrack.databinding.FragmentRecordBinding
 import com.example.emtrack.R
 import com.example.emtrack.RecorderListener
 import com.example.emtrack.SensorRecorder
+import com.example.emtrack.databinding.FragmentRecordBinding
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import com.paramsen.noise.Noise
-import kotlin.math.pow
-import kotlin.math.sqrt
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderListener {
 
@@ -157,7 +150,11 @@ class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderL
             localRecordCount++
             mTextRecWindow.text = resources.getString(R.string.rec_windows, localRecordCount)
             val data = sensorRecorder.data.slice(0 until sensorRecorder.NUM_SENSORS).toMutableList()
-            val dataStr = data.joinToString(", ") { "%.10f".format(it) }
+
+            val decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault())
+            decimalFormatSymbols.decimalSeparator = '.' // To avoid comma as decimal separator
+            val decimalFormat = DecimalFormat("#.##########", decimalFormatSymbols)
+            val dataStr = data.joinToString(",") { decimalFormat.format(it) }
             dataFile.appendText("\n$dataStr")
 
             // Labels are on the form: Null=0, Still=1, Walking=2, Run=3, Bike=4, Car=5, Bus=6, Train=7, Subway=8
