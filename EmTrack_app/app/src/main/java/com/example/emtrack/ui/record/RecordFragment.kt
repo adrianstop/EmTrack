@@ -14,7 +14,9 @@ import com.example.emtrack.R
 import com.example.emtrack.RecorderListener
 import com.example.emtrack.SensorRecorder
 import com.example.emtrack.databinding.FragmentRecordBinding
+import java.io.BufferedWriter
 import java.io.File
+import java.io.FileWriter
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -116,12 +118,12 @@ class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderL
                 if(!dataFile.exists()){
                     dataFile.writeText("accX, accY, accZ, gyroX, gyroY, gyroZ, magX, magY," +
                             " magZ, orientW, orientX, orientY, orientZ, linAccX, linAccY, linAccZ," +
-                            " accMag, gyroMag, magMag, linAccMag\n")
+                            " accMag, gyroMag, magMag, linAccMag\r\n\r\n")
                 }
 
                 labelFile = File(requireContext().filesDir, recLabelFilename)
                 if(!labelFile.exists()){
-                    labelFile.writeText("label\n")
+                    labelFile.writeText("label\r\n\r\n")
                 }
             }
             else{
@@ -154,8 +156,9 @@ class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderL
             val decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.getDefault())
             decimalFormatSymbols.decimalSeparator = '.' // To avoid comma as decimal separator
             val decimalFormat = DecimalFormat("#.##########", decimalFormatSymbols)
-            val dataStr = data.joinToString(",") { decimalFormat.format(it) }
-            dataFile.appendText("\n$dataStr")
+            var dataStr = data.joinToString(",") { decimalFormat.format(it) }
+            dataStr = dataStr.replace('\u2212', '-')
+            dataFile.appendText("$dataStr\r\n")
 
             // Labels are on the form: Null=0, Still=1, Walking=2, Run=3, Bike=4, Car=5, Bus=6, Train=7, Subway=8
             val label = when (selectedMovement) {
@@ -169,7 +172,7 @@ class RecordFragment : Fragment(), AdapterView.OnItemSelectedListener, RecorderL
                 "Subway" -> 8
                 else -> 0
             }
-            labelFile.appendText("\n$label")
+            labelFile.appendText("$label\r\n")
         }
 
     }

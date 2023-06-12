@@ -1,10 +1,7 @@
 package com.example.emtrack
 
 import android.content.Context
-import android.util.Log
-import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -50,7 +47,6 @@ class TMDModelHelper(private val context: Context) {
         inputBuffer.order(ByteOrder.nativeOrder())
         val inputFloatBuffer = inputBuffer.asFloatBuffer()
         inputFloatBuffer.put(inputData)
-
 
         val outputTensor = interpreter?.getOutputTensor(0)
         val outputBuffer = ByteBuffer.allocateDirect(outputTensor!!.numBytes())

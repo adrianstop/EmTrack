@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class LiveViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "Waiting for data..."
+        value = "Your live status will be shown here"
     }
     val text: LiveData<String> = _text
 }

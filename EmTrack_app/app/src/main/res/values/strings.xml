@@ -20,7 +20,25 @@
     <string name="rec_windows">Windows recorded: %d</string>
 
     <string name="live_state">Current state: %1$s</string>
-    <string name="live_state_accuracy">Confidence: %1$.3f</string>
+    <string name="live_state_waiting">Current state: None</string>
+    <string name="live_state_accuracy">Confidence: %1$.1f%%</string>
+    <string name="live_state_accuracy_waiting">Confidence: None</string>
+    <string name="live_status">Status: %1$s</string>
+    <string name="status_online">Online</string>
+    <string name="status_error">Malfunction</string>
+    <string name="live_status_waiting">Status: Waiting for data</string>
+
+    <string name="your_em">Emission:</string>
+    <string name="em_value">%1$.1f</string>
+    <string name="em_unit">gCO2</string>
+
+    <string name="timePerModeTitle">Time per transport mode</string>
+    <string name="timePerEmModeTitle">Time per emissive transport mode</string>
+    <string name="emPerModeTitle">Emissions per transport mode</string>
+    <string name="total_time">Total time logged: %02d days %02d hours %02d min</string>
+    <string name="emStatsTitle">Your Stats</string>
+
+
 
     <string-array name="movement_dropdown">
         <item>Still</item>
