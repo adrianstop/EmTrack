@@ -1,5 +1,11 @@
 [
 	{
+		"mode": 0,
+		"secPerMode": 0,
+		"windowCount": 0,
+		"avgConfidence": 0.0
+	},
+	{
 	  "mode": 1,
 	  "secPerMode": 0,
 	  "windowCount": 0,
@@ -37,12 +43,6 @@
 	},
 	{
 	  "mode": 7,
-	  "secPerMode": 0,
-	  "windowCount": 0,
-	  "avgConfidence": 0.0
-	},
-	{
-	  "mode": 8,
 	  "secPerMode": 0,
 	  "windowCount": 0,
 	  "avgConfidence": 0.0

@@ -1,6 +1,7 @@
 package com.example.emtrack
 
 import android.content.Context
+import android.util.Log
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.ByteBuffer
@@ -36,12 +37,14 @@ class TMDModelHelper(private val context: Context) {
     fun runInference(inputData: FloatArray): FloatArray {
         val inputShape = interpreter?.getInputTensor(0)?.shape()
         val outputShape = interpreter?.getOutputTensor(0)?.shape()
+        Log.d("TMDModelHelper", "Input shape: ${inputShape?.contentToString()}")
+        Log.d("TMDModelHelper", "Output shape: ${outputShape?.contentToString()}")
 
         // Ensure input shape matches the model's input requirements
         if (inputShape?.size != 3 || inputShape[1] != 3 || inputShape[2] != 20) {
             throw IllegalArgumentException("Invalid input shape")
         }
-
+        Log.d("TMDModelHelper", "Input data: ${inputData.contentToString()}")
         val inputTensor = interpreter?.getInputTensor(0)
         val inputBuffer = ByteBuffer.allocateDirect(inputTensor!!.numBytes())
         inputBuffer.order(ByteOrder.nativeOrder())
@@ -52,13 +55,12 @@ class TMDModelHelper(private val context: Context) {
         val outputBuffer = ByteBuffer.allocateDirect(outputTensor!!.numBytes())
         outputBuffer.order(ByteOrder.nativeOrder())
         val outputFloatBuffer = outputBuffer.asFloatBuffer()
-
         // Run inference
         interpreter?.run(inputFloatBuffer, outputBuffer)
-
         // Retrieve the output data
         val outputData = FloatArray(outputShape!![1])
         outputFloatBuffer.get(outputData)
+        Log.d("TMDModelHelper", "Output data: ${outputData.contentToString()}")
 
         return outputData
     }

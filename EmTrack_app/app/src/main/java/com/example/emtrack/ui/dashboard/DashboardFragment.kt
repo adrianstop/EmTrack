@@ -172,7 +172,6 @@ class DashboardFragment : Fragment() {
     private fun setPieChartData(emData: List<Long>, labels: List<String>, pChart: PieChart?) {
         val entries: ArrayList<PieEntry> = ArrayList()
 
-        //loop through homeStatsResponse.orderValue and sum them orderValue.sum field
         var secSum = 0L
         for (i in emData.indices) {
             secSum += emData[i]
@@ -181,6 +180,10 @@ class DashboardFragment : Fragment() {
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         val colors: ArrayList<Int> = ArrayList()
+        colors.add(ColorTemplate.rgb(getString(R.color.poor_yellow)))
+        colors.add(ColorTemplate.rgb(getString(R.color.soft_green)))
+        colors.add(ColorTemplate.rgb(getString(R.color.sophisticated_blue)))
+        colors.add(ColorTemplate.rgb(getString(R.color.rich_blue)))
         for (i in emData.indices){
             try {
                 if(emData[i] == 0L) continue
@@ -193,11 +196,11 @@ class DashboardFragment : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            //colors.add(ColorTemplate.rgb(getString(R.color.poor_yellow)))
         }
 
 
         val dataSet = PieDataSet(entries, "")
+        dataSet.colors = colors
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
         dataSet.iconsOffset = MPPointF(0F, 40F)

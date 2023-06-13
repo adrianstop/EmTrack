@@ -161,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                     val currentFragment = getCurrentFragment()
                     Log.d(TAG, "Current fragment is: $currentFragment")
                     if (currentFragment is LiveFragment) {
-                        currentFragment.updateUIElements(classes[maxIndex - 1], maxScore, resources.getString(R.string.status_online))
+                        currentFragment.updateUIElements(classes[maxIndex], maxScore, resources.getString(R.string.status_online))
                     }
                 }
                 lastTimeStamp = currTimeStamp
