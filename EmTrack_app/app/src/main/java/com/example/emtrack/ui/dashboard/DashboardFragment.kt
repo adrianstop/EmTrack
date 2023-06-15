@@ -184,6 +184,10 @@ class DashboardFragment : Fragment() {
         colors.add(ColorTemplate.rgb(getString(R.color.soft_green)))
         colors.add(ColorTemplate.rgb(getString(R.color.sophisticated_blue)))
         colors.add(ColorTemplate.rgb(getString(R.color.rich_blue)))
+        colors.add(ColorTemplate.rgb(getString(R.color.light_soft_green)))
+        colors.add(ColorTemplate.rgb(getString(R.color.contrast_blue)))
+        colors.add(ColorTemplate.rgb(getString(R.color.dark_sophisticated_blue)))
+        colors.add(ColorTemplate.rgb(getString(R.color.light_poor_yellow)))
         for (i in emData.indices){
             try {
                 if(emData[i] == 0L) continue

@@ -7,4 +7,7 @@
     <color name="contrast_blue">#121ED9</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_sophisticated_blue">#114355</color>
+    <color name="light_soft_green">#5EEDC2</color>
+    <color name="light_poor_yellow">#EBDF2D</color>
 </resources>

@@ -29,7 +29,7 @@
     <string name="live_status_waiting">Status: Waiting for data</string>
 
     <string name="your_em">Emission:</string>
-    <string name="em_value">%1$.1f</string>
+    <string name="em_value">%1$.0f</string>
     <string name="em_unit">gCO2</string>
 
     <string name="timePerModeTitle">Time per transport mode</string>
