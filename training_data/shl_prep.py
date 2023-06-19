@@ -9,7 +9,6 @@ dataExplanation = [
     "magX", "magY", "magZ", 
     "orientW", "orientX", "orientY", "orientZ",
     "linAccX", "linAccY", "linAccZ", 
-    "pressure", 
     "accMag", "gyroMag", "magMag", "linAccMag"
 ]
 labelsExplanation = ["label"]
@@ -43,8 +42,8 @@ for i in range(0, len(dirlist)):
     labels = labels[0:labels.size:20]
     print(data.shape)
     
-    # Purge coloumn 0 (time), 14-16 (gravity), 21 (altitude) and 22 (temperature)
-    data = np.delete(data, [0, 14, 15, 16, 21, 22], axis=1)
+    # Purge coloumn 0 (time), 14-16 (gravity), 20 pressure, 21 (altitude) and 22 (temperature)
+    data = np.delete(data, [0, 14, 15, 16, 20, 21, 22], axis=1)
     
     # Purge coloumn 0 (time), 2-7 (other labels)
     labels = np.delete(labels, [0, 2, 3, 4, 5, 6, 7], axis=1)
